@@ -1,61 +1,53 @@
-version: '3.8'
-
 services:
-  magicmatch:
+  cgg-toolkit:
     build:
       context: .
       target: runtime
-    image: cgg/magicmatch
+    image: cgg-toolkit:latest
+    volumes:
+      - ./data:/workspace/data
+    working_dir: /workspace
+    entrypoint: ["/bin/bash", "-c"]
+    command: ["echo 'Available commands: magicmatch, cast, generage, prss33, genefuse, ssearch35, create_cogent.sh, mcl_clustering.sh' && /bin/bash"]
+
+  # Individual tool aliases (all using the same built image)
+  magicmatch:
+    image: cgg-toolkit:latest
     entrypoint: ["magicmatch"]
     volumes:
       - ./data:/workspace/data
     working_dir: /workspace
 
   genecast:
-    build:
-      context: .
-      target: runtime
-    image: cgg/genecast
+    image: cgg-toolkit:latest
     entrypoint: ["cast"]
     volumes:
       - ./data:/workspace/data
     working_dir: /workspace
 
   generage:
-    build:
-      context: .
-      target: runtime
-    image: cgg/generage
+    image: cgg-toolkit:latest
     entrypoint: ["generage"]
     volumes:
       - ./data:/workspace/data
     working_dir: /workspace
 
   genefuse:
-    build:
-      context: .
-      target: runtime
-    image: cgg/genefuse
+    image: cgg-toolkit:latest
     entrypoint: ["genefuse"]
     volumes:
       - ./data:/workspace/data
     working_dir: /workspace
 
-  cogent_utils:
-    build:
-      context: .
-      target: runtime
-    image: cgg/cogent_utils
+  cogent:
+    image: cgg-toolkit:latest
     entrypoint: ["create_cogent.sh"]
     volumes:
       - ./data:/workspace/data
     working_dir: /workspace
 
-  clustt_utils:
-    build:
-      context: .
-      target: runtime
-    image: cgg/clustt_utils
+  clustt:
+    image: cgg-toolkit:latest
     entrypoint: ["mcl_clustering.sh"]
     volumes:
       - ./data:/workspace/data
