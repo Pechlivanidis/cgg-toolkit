@@ -2,70 +2,67 @@
 
 usage() {
   cat <<EOF
-Usage: $(basename "$0") arg1
+Usage: $(basename "$0") <input> [output_folder]
 
-Creates a cogent generator script
+Converts FASTA files to CoGenT format.
 
-Available options:
-
-arg1            Input file that contains the fasta files to be transformed
-arg2            Name of the generated script's output folder
--h, --help      Print this help and exit
-
+Arguments:
+  <input>           Input file (.fasta) or directory containing .fasta files
+  [output_folder]   Output folder for results (default: CoGent_ID)
+  -h, --help        Print this help and exit
 EOF
   exit
 }
 
-
 parse_params() {
-  # default values of variables set from params
-  flag=0
-  input_file="${1-GenomeAll}"
+  input="$1"
   output_folder="${2-CoGent_ID}"
-
-  while :; do
-    case "${1-}" in
-    -h | --help)
-      usage
-      ;;
-    -?*)
-      die "Unknown option: $1"
-      ;;
-    *)
-      break
-      ;;
-    esac
-    shift
-  done
-
-  args=("$@")
-
-  return 0
+  if [[ -z "$input" || "$input" == "-h" || "$input" == "--help" ]]; then
+    usage
+  fi
 }
 
+parse_params "$@"
 
-parse_params "$@"            
+# Sanity check: input must exist
+if [[ ! -e "$input" ]]; then
+  echo "Error: Input '$input' does not exist." >&2
+  exit 1
+fi
 
-printf "%s\n\n" \#\!/bin/sh
+mkdir -p "$output_folder"
 
-printf "%s\n\n"  "mkdir ${output_folder}"
+# Directory mode: process all .fasta files in the directory
+if [[ -d "$input" ]]; then
+  for f in "$input"/*.fasta; do
+    [[ ! -f "$f" ]] && continue
+    title="$(basename "$f" .fasta)"
+    if [[ ! -s "$f" ]]; then
+      echo "Warning: File '$f' is empty, skipping." >&2
+      continue
+    fi
+    awk -v title="$title" 'BEGIN{seq=0} \
+      /^>/ {printf(">%s-01-%06d %s\n", title, seq++, substr($0,2)); next} \
+      {print}' "$f" > "$output_folder/${title}.faa"
+    echo "Processed $f -> $output_folder/${title}.faa"
+  done
+  exit 0
+fi
 
-cat "${input_file}" | while read line; do
-	echo $line > temp
-	printf "%s" "awk '/>/{printf(\"+"
-	printf "%s" "`awk '{print $2}' temp;`"
-	printf "%s" "-01-%006d \", i++)}1'  "
-	printf "%s" "`awk '{print $1}' temp;`"
-	printf "%s" " > ${output_folder}/";
-	printf "%s" "`awk '{print $2}' temp;`"
-	printf "%s \n" ".faa;"
+# Single FASTA file mode
+if [[ "$input" == *.fasta ]]; then
+  title="$(basename "$input" .fasta)"
+  if [[ ! -s "$input" ]]; then
+    echo "Error: Input fasta file '$input' is empty." >&2
+    exit 1
+  fi
+  awk -v title="$title" 'BEGIN{seq=0} \
+    /^>/ {printf(">%s-01-%06d %s\n", title, seq++, substr($0,2)); next} \
+    {print}' "$input" > "$output_folder/${title}.faa"
+  echo "Output written to $output_folder/${title}.faa"
+  exit 0
+fi
 
-	printf "%s" "sed -i 's/>//g' ${output_folder}/";
-	printf "%s" "`awk '{print $2}' temp;`";
-	printf "%s \n" ".faa;";
-
-	printf "%s" "sed -i 's/+/>/g' ${output_folder}/";
-	printf "%s" "`awk '{print $2}' temp;`";
-	printf "%s \n" ".faa;";
-done;
-rm temp
+# If input is not a directory or .fasta file, print error
+echo "Error: Input must be a .fasta file or a directory containing .fasta files." >&2
+exit 1
