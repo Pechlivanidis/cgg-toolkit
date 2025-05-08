@@ -56,7 +56,8 @@ parse_params() {
   families_output_file="${2-families.output.txt}"
   i_mcl_param="${3-1.8}"
   mcl_executable="${4-/usr/bin/mcl}"
-  graph_file="${input_file%.*}.graph"
+  input_base=$(basename "${input_file}")
+  graph_file="${input_base%.*}.graph"
   mcl_output_file="out.${graph_file}.I${i_mcl_param}"
   
   while :; do

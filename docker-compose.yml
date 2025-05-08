@@ -28,9 +28,11 @@ services:
   generage:
     image: cgg-toolkit:latest
     entrypoint: ["generage"]
+    working_dir: /workspace/data
+    environment:
+      - PRSSDIR=/usr/local/bin
     volumes:
       - ./data:/workspace/data
-    working_dir: /workspace
 
   genefuse:
     image: cgg-toolkit:latest

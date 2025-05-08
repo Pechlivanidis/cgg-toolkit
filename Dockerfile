@@ -78,6 +78,7 @@ COPY --from=cogent_utils /app/2_cogent_utils/create_cogent.sh /usr/local/bin/cre
 COPY --from=clustt_utils /app/3_clustt_utils/mcl_clustering.sh /usr/local/bin/mcl_clustering.sh
 
 RUN chmod +x /usr/local/bin/*.sh
+RUN chmod +x /usr/local/bin/prss33
 
 ENV PATH="/usr/local/bin:$PATH"
 
