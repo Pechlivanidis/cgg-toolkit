@@ -55,7 +55,7 @@ parse_params() {
   input_file="${1-target.pairs}"
   families_output_file="${2-families.output.txt}"
   i_mcl_param="${3-1.8}"
-  mcl_executable="${4-/home/ouzounis/bcpl/bin/mcl}"
+  mcl_executable="${4-/usr/bin/mcl}"
   graph_file="${input_file%.*}.graph"
   mcl_output_file="out.${graph_file}.I${i_mcl_param}"
   

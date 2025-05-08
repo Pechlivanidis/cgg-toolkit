@@ -13,7 +13,9 @@ RUN apt-get update && \
         perl \
         mawk \
         sed \
-        libgomp1 && \
+        libgomp1 \
+        procps \
+        mcl && \
     apt-get clean && \
     rm -rf /var/lib/apt/lists/*
 
@@ -58,7 +60,9 @@ RUN apt-get update && \
         perl \
         mawk \  
         sed \
-        libgomp1 && \
+        libgomp1 \
+        procps \
+        mcl && \
     apt-get clean && \
     rm -rf /var/lib/apt/lists/*
 
