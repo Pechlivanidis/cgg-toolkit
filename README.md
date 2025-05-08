@@ -112,7 +112,7 @@ docker compose run --rm generage example.fasta example.parsed
 
 **Example:**
 ```sh
-docker compose run --rm genefuse /workspace/data/meth.fasta /workspace/data/sach2.fasta /workspace/data/meth_v_meth.m8.blastout /workspace/data/meth_v_sach.m8.blastout -verbose -rand 1000
+docker compose run --rm genefuse /workspace/data/meth.fasta /workspace/data/sach2.fasta /workspace/data/meth_v_meth.m8.blastout /workspace/data/meth_v_sach.m8.blastout
 ```
 
 ---

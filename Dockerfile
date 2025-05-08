@@ -79,6 +79,7 @@ COPY --from=clustt_utils /app/3_clustt_utils/mcl_clustering.sh /usr/local/bin/mc
 
 RUN chmod +x /usr/local/bin/*.sh
 RUN chmod +x /usr/local/bin/prss33
+RUN chmod +x /usr/local/bin/ssearch35
 
 ENV PATH="/usr/local/bin:$PATH"
 
