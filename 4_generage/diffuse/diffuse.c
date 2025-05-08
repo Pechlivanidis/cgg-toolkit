@@ -1064,7 +1064,7 @@ else
 
 sprintf(random,"%d", randomize);
 strcpy(command_string,"");
-strcat(command_string,"./ssearch35 -E 10000 -H -B -d 1 -z 21 -Z ");
+strcat(command_string,"ssearch35 -E 10000 -H -B -d 1 -z 21 -Z ");
 strcat(command_string,random);
 strcat(command_string, " -k ");
 strcat(command_string, random);
